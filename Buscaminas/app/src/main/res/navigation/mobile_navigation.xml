@@ -3,22 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_Play">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.buscaminas.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.buscaminas.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_Play"
+        android:name="com.example.buscaminas.dashboard.DashboardFragment"
         android:label="@string/title_Jugar"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_Clasificacion"
         android:name="com.example.buscaminas.ui.notifications.NotificationsFragment"
         android:label="@string/title_Clasificacion"
         tools:layout="@layout/fragment_notifications" />

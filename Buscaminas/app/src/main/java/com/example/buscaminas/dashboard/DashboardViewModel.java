@@ -1,4 +1,4 @@
-package com.example.buscaminas.ui.dashboard;
+package com.example.buscaminas.dashboard;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

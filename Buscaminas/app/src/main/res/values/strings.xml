@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Buscaminas</string>
-    <string name="title_home">Mi Perfil</string>
     <string name="title_Jugar">Jugar</string>
     <string name="title_Clasificacion">Clasificacion</string>
 </resources>

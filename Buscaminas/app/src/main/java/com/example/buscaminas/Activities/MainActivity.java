@@ -1,20 +1,16 @@
-package com.example.buscaminas;
+package com.example.buscaminas.Activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.buscaminas.ui.dashboard.DashboardFragment;
-import com.example.buscaminas.ui.home.HomeFragment;
+import com.example.buscaminas.R;
+import com.example.buscaminas.Adapter.ViewPagerAdapter;
+import com.example.buscaminas.dashboard.DashboardFragment;
 import com.example.buscaminas.ui.notifications.NotificationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -22,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private BottomNavigationView bottomNavigationView ;
     private ViewPager viewPager;
     DashboardFragment dashboardFragment;
-    HomeFragment homeFragment;
     NotificationsFragment notificationsFragment;
 
     @Override
@@ -57,18 +52,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (item.getItemId()) {
 
-            case R.id.navigation_home:
+            case R.id.navigation_Play:
                 viewPager.setCurrentItem(0);
                 pagActual = true;
             break;
 
-            case R.id.navigation_dashboard:
+            case R.id.navigation_Clasificacion:
                 viewPager.setCurrentItem(1);
-                pagActual = true;
-            break;
-
-            case R.id.navigation_notifications:
-                viewPager.setCurrentItem(2);
                 pagActual = true;
             break;
         }
@@ -77,10 +67,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        homeFragment = new HomeFragment();
         dashboardFragment=new DashboardFragment();
         notificationsFragment = new NotificationsFragment();
-        adapter.addFragment(homeFragment);
         adapter.addFragment(dashboardFragment);
         adapter.addFragment(notificationsFragment);
         viewPager.setAdapter(adapter);
