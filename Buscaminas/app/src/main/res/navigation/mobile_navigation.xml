@@ -9,11 +9,11 @@
         android:id="@+id/navigation_Play"
         android:name="com.example.buscaminas.dashboard.DashboardFragment"
         android:label="@string/title_Jugar"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard"/>
 
     <fragment
         android:id="@+id/navigation_Clasificacion"
         android:name="com.example.buscaminas.ui.notifications.NotificationsFragment"
         android:label="@string/title_Clasificacion"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications"/>
 </navigation>
