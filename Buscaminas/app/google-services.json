@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "498365591517",
+    "firebase_url": "https://buscaminas-e0496.firebaseio.com/",
+    "project_id": "buscaminas-e0496",
+    "storage_bucket": "buscaminas-e0496.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498365591517:android:dfd29ea848902f82f15034",
+        "android_client_info": {
+          "package_name": "com.example.buscaminas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498365591517-su9al0q37mjektthrdf5h2eq6ck66j87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoFeUx-ARewh0mXzeeIA-vaa291bk7nNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498365591517-su9al0q37mjektthrdf5h2eq6ck66j87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.example.buscaminas.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -7,21 +8,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.buscaminas.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnLogin,btnRegister;
-    private EditText editNombre,editContrasena;
+    private Button btnLogin, btnRegister;
+    private EditText editEmail, editContrasena;
+    private String email, contrasena;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
-        editNombre = findViewById(R.id.editNombre);
+        editEmail = findViewById(R.id.editEmail);
         editContrasena = findViewById(R.id.editContrasena);
 
         btnLogin.setOnClickListener(this);
@@ -32,17 +44,45 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch(v.getId()) {
             case R.id.btnLogin:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+            email = editEmail.getText().toString();
+            contrasena = editContrasena.getText().toString();
+
+            if (!email.isEmpty() && !contrasena.isEmpty()) {
+                iniciarSesion();
+            } else
+                Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show();
             break;
             case R.id.btnRegister:
-                intent = new Intent(this,RegisterActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
             break;
-
         }
 
     }
+
+    public void iniciarSesion(){
+        mAuth.signInWithEmailAndPassword(editEmail.getText().toString().trim(),editContrasena.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    finish();
+                }else
+                    Toast.makeText(LoginActivity.this, "No se pudo iniciar sesion", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        if(mAuth.getCurrentUser() != null){
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+        }
+    }
+
 }
