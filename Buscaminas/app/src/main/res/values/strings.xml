@@ -3,4 +3,6 @@
     <string name="title_Jugar">Jugar</string>
     <string name="title_Clasificacion">Clasificacion</string>
     <string name="title_CerrarSesion">CerrarSesion</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_jugar">Jugar</string>
 </resources>

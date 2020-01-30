@@ -1,6 +1,9 @@
 package com.example.buscaminas.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.buscaminas.R;
@@ -8,6 +11,7 @@ import com.example.buscaminas.Adapter.ViewPagerAdapter;
 import com.example.buscaminas.dashboard.DashboardFragment;
 import com.example.buscaminas.ui.notifications.NotificationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +21,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private BottomNavigationView bottomNavigationView ;
     private ViewPager viewPager;
-    DashboardFragment dashboardFragment;
-    NotificationsFragment notificationsFragment;
+    private DashboardFragment dashboardFragment;
+    private NotificationsFragment notificationsFragment;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
 
         bottomNavigationView  = findViewById(R.id.nav_view);
+
+        mAuth = FirebaseAuth.getInstance();
 
         viewPager = findViewById(R.id.viewpager);
 
@@ -72,5 +79,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         adapter.addFragment(dashboardFragment);
         adapter.addFragment(notificationsFragment);
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_nav_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean itemSeleccionado = false;
+        switch(item.getItemId()){
+            case R.id.cerrarSesion:
+                mAuth.signOut();
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                itemSeleccionado = true;
+            break;
+
+        }
+        return itemSeleccionado;
     }
 }
