@@ -5,44 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/fragment_qc_flSelectWorkDone"
+
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:background="@drawable/spinner_shape"
+        android:foregroundTint="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Niveles de dificultad:"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnJugar">
+        app:layout_constraintTop_toBottomOf="@+id/btnJugar" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/spinner_shape">
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginLeft="8dp"
-                android:gravity="center"
-                android:textSize="12sp" />
-        </FrameLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="15dp"
-            android:textColor="#FFFFFF"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text="Niveles de dificultad"
-            android:textSize="14sp" />
-    </FrameLayout>
 
     <Button
         android:id="@+id/btnJugar"

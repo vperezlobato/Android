@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,13 +23,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editEmail, editContrasena;
     private String email, contrasena;
     private FirebaseAuth mAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mAuth = FirebaseAuth.getInstance();
 
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
@@ -38,12 +35,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if(user != null){
+            finish();
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+        }
     }
 
 
     @Override
     public void onClick(View v) {
-        Intent intent;
         switch(v.getId()) {
             case R.id.btnLogin:
             email = editEmail.getText().toString();
@@ -75,14 +81,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    @Override
-    protected void onStart(){
-        super.onStart();
-
-        if(mAuth.getCurrentUser() != null){
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-            finish();
-        }
-    }
 
 }

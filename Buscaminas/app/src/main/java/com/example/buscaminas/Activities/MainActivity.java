@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private ViewPager viewPager;
     private DashboardFragment dashboardFragment;
     private NotificationsFragment notificationsFragment;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
 
         bottomNavigationView  = findViewById(R.id.nav_view);
-
-        mAuth = FirebaseAuth.getInstance();
 
         viewPager = findViewById(R.id.viewpager);
 
@@ -93,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         boolean itemSeleccionado = false;
         switch(item.getItemId()){
             case R.id.cerrarSesion:
-                mAuth.signOut();
+                FirebaseAuth.getInstance().signOut();
+                finish();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
                 itemSeleccionado = true;
             break;

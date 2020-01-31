@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.buscaminas.R;
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private Button registrar;
     private EditText email,usuario,password,confirmPassword;
+    private TextView alreadyHaveAcc;
     private String txtEmail,txtUsuario,txtPassword, txtConfirmPassword;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -42,6 +44,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         password = findViewById(R.id.editRegisterContrasena);
         confirmPassword = findViewById(R.id.editRegisterConfirmacionContrasena);
         registrar = findViewById(R.id.btnRegisterRegister);
+        alreadyHaveAcc = findViewById(R.id.textAlreadyHave);
+
+        alreadyHaveAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+            }
+        });
 
         registrar.setOnClickListener(this);
     }
@@ -66,14 +76,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void registerUser(){
-        mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Map<String,Object> map = new HashMap<>();
                     map.put("usuario",txtUsuario);
-                    map.put("email",txtEmail);
-                    map.put("password",txtPassword);
 
                     String id = mAuth.getCurrentUser().getUid();
 
@@ -81,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onComplete(@NonNull Task<Void> task2) {
                             if(task2.isSuccessful()){
-                                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+                                Toast.makeText(RegisterActivity.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
                                 finish();
                             }else
                                 Toast.makeText(RegisterActivity.this, "No se han podido crear los datos correctamente", Toast.LENGTH_SHORT).show();
