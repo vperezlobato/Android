@@ -5,17 +5,59 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.JuegoActivity">
+    tools:context=".Activities.JuegoActivity"
+    android:background="@drawable/gradient">
 
     <View
         android:id="@+id/gridFrame"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
-        android:background="@android:color/holo_blue_light"
+        android:background="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Chronometer
+        android:id="@+id/cronometro"
+        android:layout_width="122dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        android:ems="10"
+        android:inputType="time"
+        android:textSize="30dp"
+        android:textColor="#f00"
+        android:background="#000"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/gridFrame"
+        app:layout_constraintStart_toEndOf="@+id/carita" />
+
+    <ImageView
+        android:id="@+id/carita"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/gridFrame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/caritasonriente" />
+
+    <TextView
+        android:id="@+id/numeroMinas"
+        android:layout_width="93dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="000"
+        android:inputType="number"
+        android:textSize="30dp"
+        android:textColor="#f00"
+        android:background="#000"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/gridFrame"
+        app:layout_constraintEnd_toStartOf="@+id/carita" />
 </androidx.constraintlayout.widget.ConstraintLayout>

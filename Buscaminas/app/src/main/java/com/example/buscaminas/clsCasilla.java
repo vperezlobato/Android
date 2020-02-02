@@ -1,20 +1,50 @@
 package com.example.buscaminas;
 
-import android.media.Image;
-
 public class clsCasilla {
 
     private Boolean esBomba;
     private Boolean banderaPuesta;
     private Boolean yaPulsada;
-    private Image imagen;
-
+    private int imagen;
+    private int id;
+    private int numero;
+    private int posX,posY;
     public clsCasilla(){
         esBomba = false;
         banderaPuesta = false;
         yaPulsada = false;
+        imagen = R.drawable.casilla;
+        id = 0;
+        numero = 0;
+        posX = 0;
+        posY = 0;
+    }
 
+    public clsCasilla(int x,int y){
+        esBomba = false;
+        banderaPuesta = false;
+        yaPulsada = false;
+        imagen = R.drawable.casilla;
+        id = 0;
+        numero = 0;
+        this.posX = x;
+        this.posY = y;
+    }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 
     public Boolean getEsBomba() {
@@ -33,11 +63,11 @@ public class clsCasilla {
         this.yaPulsada = yaPulsada;
     }
 
-    public Image getImagen() {
+    public int getImagen() {
         return imagen;
     }
 
-    public void setImagen(Image imagen) {
+    public void setImagen(int imagen) {
         this.imagen = imagen;
     }
 
@@ -49,4 +79,19 @@ public class clsCasilla {
         this.banderaPuesta = banderaPuesta;
     }
 
+    public int getPosX() {
+        return posX;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
 }
