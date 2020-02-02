@@ -292,25 +292,25 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         ImageView casillaSeleccionada = (ImageView)v;
         boolean pulsoLargo = false;
         clsCasilla casilla = obtenerCasilla(vm.getTablero(),v.getId());
-
-        empezarCronometro();
-
-        if(!casilla.getBanderaPuesta()) {
-            if (!casilla.getYaPulsada()) {
-                casillaSeleccionada.setImageResource(R.drawable.bandera);
-                casilla.setBanderaPuesta(true);
-                casilla.setYaPulsada(true);
-                vm.setNumeroMinas(vm.getNumeroMinas()-1);
+        if(vm.isJugando()){
+            empezarCronometro();
+            if(!casilla.getBanderaPuesta()) {
+                if (!casilla.getYaPulsada()) {
+                    casillaSeleccionada.setImageResource(R.drawable.bandera);
+                    casilla.setBanderaPuesta(true);
+                    casilla.setYaPulsada(true);
+                    vm.setNumeroMinas(vm.getNumeroMinas()-1);
+                    minas.setText(String.valueOf(vm.getNumeroMinas()));
+                    pulsoLargo = true;
+                }
+            }else{
+                casillaSeleccionada.setImageResource(R.drawable.casilla);
+                casilla.setBanderaPuesta(false);
+                casilla.setYaPulsada(false);
+                vm.setNumeroMinas(vm.getNumeroMinas()+1);
                 minas.setText(String.valueOf(vm.getNumeroMinas()));
                 pulsoLargo = true;
             }
-        }else{
-            casillaSeleccionada.setImageResource(R.drawable.casilla);
-            casilla.setBanderaPuesta(false);
-            casilla.setYaPulsada(false);
-            vm.setNumeroMinas(vm.getNumeroMinas()+1);
-            minas.setText(String.valueOf(vm.getNumeroMinas()));
-            pulsoLargo = true;
         }
         return pulsoLargo;
     }
