@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.buscaminas.R;
@@ -21,6 +23,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button btnLogin, btnRegister;
     private EditText editEmail, editContrasena;
+    private TextView accOlvidada;
     private String email, contrasena;
     private FirebaseAuth mAuth;
     @Override
@@ -32,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnRegister = findViewById(R.id.btnRegister);
         editEmail = findViewById(R.id.editEmail);
         editContrasena = findViewById(R.id.editContrasena);
-
+        accOlvidada = findViewById(R.id.textPasswordOlvidada);
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
 
@@ -45,6 +48,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
         }
+        accOlvidada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editEmail.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+                }else {
+                    mAuth.sendPasswordResetEmail(editEmail.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Se te han enviado instrucciones para resetear tu contraseña", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(LoginActivity.this, "¡Error al enviar el correo electrónico de restablecimiento!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
     }
 
 
@@ -80,6 +103,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
     }
+
+
 
 
 }
