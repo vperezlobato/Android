@@ -90,6 +90,18 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 vm.setNumeroMinas(minasParaReinicio);
+                //Para optimizar el funcionamiento de la partida necesitamos limpiar el tablero porque si no cada vez que genera un nuevo tablero
+                // realizaria la misma funcion segun el numero de tableros que he generado.
+                // Por ejemplo si he reiniciado la partida 3 veces estaria haciendo todos los procesos de busqueda 3 veces
+                ConstraintSet cs = new ConstraintSet();
+                cs.clear(R.id.gridFrame);
+                cs.applyTo(layout);
+                for (int iRow = 0; iRow < vm.getTablero().getAltura(); iRow++) {
+                    for (int iCol = 0; iCol < vm.getAncho(); iCol++) {
+                          View view =  layout.getViewById(idArray[iRow][iCol]);
+                          layout.removeView(view);
+                    }
+                }
                 vm.crearPartida();
                 pintarTablero();
                 minas.setText(String.valueOf(vm.getNumeroMinas()));
