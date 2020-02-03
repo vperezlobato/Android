@@ -67,10 +67,6 @@ public class clsCasilla {
         return imagen;
     }
 
-    public void setImagen(int imagen) {
-        this.imagen = imagen;
-    }
-
     public Boolean getBanderaPuesta() {
         return banderaPuesta;
     }
@@ -83,15 +79,8 @@ public class clsCasilla {
         return posX;
     }
 
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
     public int getPosY() {
         return posY;
     }
 
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
 }

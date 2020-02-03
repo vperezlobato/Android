@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Layout;
@@ -38,6 +39,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     private Chronometer cronometro;
     private TextView minas;
     private ImageView carita;
+    private int minasParaReinicio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,19 +73,33 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case "Nivel Extremo":
-                vm.setAltura(14);
-                vm.setAncho(14);
-                vm.setNumeroMinas(100);
+                vm.setAltura(16);
+                vm.setAncho(16);
+                vm.setNumeroMinas(60);
                 break;
 
         }
 
         minas.setText(String.valueOf(vm.getNumeroMinas()));
-
+        minasParaReinicio = vm.getNumeroMinas();
         vm.crearPartida();
 
         pintarTablero();
 
+        carita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vm.setNumeroMinas(minasParaReinicio);
+                vm.crearPartida();
+                pintarTablero();
+                minas.setText(String.valueOf(vm.getNumeroMinas()));
+                carita.setImageResource(R.drawable.caritasonriente);
+                vm.setPrimerClick(true);
+                vm.setJugando(true);
+                cronometro.stop();
+                cronometro.setBase(SystemClock.elapsedRealtime());
+            }
+        });
     }
 
 
@@ -194,7 +210,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
     private void mostrarCasillasAlrededor(int posX, int posY) {
         ImageView imagen;
-        if (posX >= 0 && posX < vm.getAltura() && posY >= 0 && posY < vm.getAncho() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta()) {
+        if (posX >= 0 && posX < vm.getAltura() && posY >= 0 && posY < vm.getAncho() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta()) {
             if (vm.getTablero().getTablero()[posX][posY].getNumero() == 0) {
                 imagen = findViewById(vm.getTablero().getTablero()[posX][posY].getId());
                 ponerleImagenDeNumeroAlaCasilla(imagen, vm.getTablero().getTablero()[posX][posY]);

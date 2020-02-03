@@ -39,7 +39,6 @@
         android:id="@+id/carita"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/gridFrame"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,8 +47,8 @@
 
     <TextView
         android:id="@+id/numeroMinas"
-        android:layout_width="93dp"
-        android:layout_height="48dp"
+        android:layout_width="122dp"
+        android:layout_height="46dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
         android:text="000"
