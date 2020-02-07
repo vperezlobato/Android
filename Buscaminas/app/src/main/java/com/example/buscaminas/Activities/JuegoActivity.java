@@ -1,5 +1,7 @@
 package com.example.buscaminas.Activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -23,12 +25,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.buscaminas.Partida;
 import com.example.buscaminas.R;
 import com.example.buscaminas.ViewModelJuego;
 import com.example.buscaminas.clsCasilla;
 import com.example.buscaminas.tablero;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JuegoActivity extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener{
 
@@ -40,6 +54,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     private TextView minas;
     private ImageView carita;
     private int minasParaReinicio;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +66,9 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         minas = findViewById(R.id.numeroMinas);
         carita = findViewById(R.id.carita);
         layout = findViewById(R.id.layout);
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = mAuth.getCurrentUser();
 
         vm = ViewModelProviders.of(this).get(ViewModelJuego.class);
         Intent intent = getIntent();
@@ -64,7 +83,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             case "Nivel Medio":
                 vm.setAltura(8);
                 vm.setAncho(8);
-                vm.setNumeroMinas(15);
+                vm.setNumeroMinas(1);
                 break;
             case "Nivel Dificil":
                 vm.setAltura(16);
@@ -84,7 +103,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         minasParaReinicio = vm.getNumeroMinas();
         vm.crearPartida();
 
-        pintarTablero();
+        pintarTablero(); // 0 - for private mode
 
         carita.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +236,32 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "Has ganado!", Toast.LENGTH_SHORT).show();
             cronometro.stop();
             vm.setJugando(false);
+            //-----------------------------------------------------------------
+            String id = mAuth.getCurrentUser().getUid();
+            mDatabase.child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Partida post = dataSnapshot.getValue(Partida.class);
+                    System.out.println(post);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            mDatabase.child("Usuarios").child(id).getKey();
+            Partida partida = new Partida();
+            partida.setDificultad(dificultad);
+            partida.setNumeroPartidas(1);
+            partida.setNumeroPartidasGanadas(1);
+
+
+
+            mDatabase.child("Usuarios").child(id).child(partida.getID()).setValue(partida);
+
+            //------------------------------------------------------------------
         }
     }
 
@@ -247,7 +292,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
     private void mostrarMinas(int posX,int posY) {
         ImageView imagen;
-        int contador = 0;
+        
         for(int i = 0; i < vm.getAltura();i++){
             for(int j = 0; j< vm.getAncho();j++){
                 if(vm.getTablero().getTablero()[i][j].getEsBomba() && vm.getTablero().getTablero()[i][j].getBanderaPuesta()) {
