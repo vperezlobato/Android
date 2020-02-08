@@ -7,11 +7,11 @@ public class Partida {
     private String dificultad;
     private int numeroPartidas;
     private int numeroPartidasGanadas;
-    private String ID;
-    private static final String Characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private String usuario;
 
     public Partida(){
-        ID = randomKey();
+        //ID = randomKey();
+        usuario = "";
         dificultad = "";
         numeroPartidasGanadas = 0;
         numeroPartidas = 0;
@@ -22,6 +22,14 @@ public class Partida {
         this.dificultad = dificultad;
         this.numeroPartidas = numeroPartidas;
         this.numeroPartidasGanadas = numeroPartidasGanadas;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public int getNumeroPartidas() {
@@ -48,18 +56,4 @@ public class Partida {
         this.numeroPartidasGanadas = numeroPartidasGanadas;
     }
 
-    public String getID() {
-        return ID;
-    }
-
-    public String randomKey(){
-        StringBuilder key = new StringBuilder();
-        Random rd = new Random();
-
-        for(int i = 0; i < 10; i++){
-            key.append(Characters.charAt(rd.nextInt(Characters.length())));
-        }
-
-        return key.toString();
-    }
 }

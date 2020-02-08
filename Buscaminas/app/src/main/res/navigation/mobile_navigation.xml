@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_Clasificacion"
-        android:name="com.example.buscaminas.ui.notifications.NotificationsFragment"
+        android:name="com.example.buscaminas.ui.notifications.ClasificacionFragment"
         android:label="@string/title_Clasificacion"
         tools:layout="@layout/fragment_notifications"/>
 </navigation>

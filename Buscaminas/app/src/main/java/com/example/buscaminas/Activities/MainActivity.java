@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.example.buscaminas.R;
 import com.example.buscaminas.Adapter.ViewPagerAdapter;
 import com.example.buscaminas.dashboard.DashboardFragment;
-import com.example.buscaminas.ui.notifications.NotificationsFragment;
+import com.example.buscaminas.ui.notifications.ClasificacionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private BottomNavigationView bottomNavigationView ;
     private ViewPager viewPager;
     private DashboardFragment dashboardFragment;
-    private NotificationsFragment notificationsFragment;
+    private ClasificacionFragment clasificacionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         dashboardFragment=new DashboardFragment();
-        notificationsFragment = new NotificationsFragment();
+        clasificacionFragment = new ClasificacionFragment();
         adapter.addFragment(dashboardFragment);
-        adapter.addFragment(notificationsFragment);
+        adapter.addFragment(clasificacionFragment);
         viewPager.setAdapter(adapter);
     }
 

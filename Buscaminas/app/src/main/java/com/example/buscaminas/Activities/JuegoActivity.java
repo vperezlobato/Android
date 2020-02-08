@@ -56,6 +56,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     private int minasParaReinicio;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private FirebaseUser user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         layout = findViewById(R.id.layout);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser user = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
 
         vm = ViewModelProviders.of(this).get(ViewModelJuego.class);
         Intent intent = getIntent();
@@ -198,14 +200,9 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             if(!casilla.getBanderaPuesta()) {
                 if (!casilla.getYaPulsada()) {
                     if (casilla.getEsBomba()) {
-                        vm.setJugando(false);
-                        mostrarMinas(casilla.getPosX(),casilla.getPosY());
-                        cronometro.stop();
-                        carita.setImageResource(R.drawable.caritaperdedor);
-                        Toast.makeText(this, "Has perdido", Toast.LENGTH_SHORT).show();
+                       perder(casilla);
                     } else {
                         if(casilla.getNumero() == 0){
-                            //TODO metodo recursivo para descubrir las casillas
                             mostrarCasillasAlrededor(casilla.getPosX(),casilla.getPosY());
                             victoria();
                         }else {
@@ -220,7 +217,44 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void perder(clsCasilla casilla) {
+        vm.setJugando(false);
+        mostrarMinas(casilla.getPosX(),casilla.getPosY());
+        cronometro.stop();
+        carita.setImageResource(R.drawable.caritaperdedor);
+        final String id = user.getUid();
+        final boolean[] primeraInserccion = {true}; //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono lso if´s de dentro
+        mDatabase.child("Usuarios").child(id).child(dificultad).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Partida partida = dataSnapshot.getValue(Partida.class);
+
+                if(partida == null && primeraInserccion[0]){
+                    partida = new Partida();
+                    partida.setDificultad(dificultad);
+                    partida.setNumeroPartidas(1);
+                    primeraInserccion[0] = false;
+                }else
+                if(partida != null && primeraInserccion[0]){
+                    partida.setNumeroPartidas(partida.getNumeroPartidas()+1);
+                    primeraInserccion[0] = false;
+                }
+
+                mDatabase.child("Usuarios").child(id).child(partida.getDificultad()).setValue(partida);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        Toast.makeText(this, "Has perdido", Toast.LENGTH_SHORT).show();
+    }
+
     private void victoria() {
+        final String id = user.getUid();
+        final boolean[] primeraInserccion = {true};
+
         int numeroDeCasillaSinMinas = (vm.getAltura()*vm.getAncho()) - vm.getNumeroMinas();
         int contadorCasillasMostradas = 0;
         for(int i = 0; i < vm.getAltura(); i++){
@@ -237,12 +271,26 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             cronometro.stop();
             vm.setJugando(false);
             //-----------------------------------------------------------------
-            String id = mAuth.getCurrentUser().getUid();
-            mDatabase.child(id).addValueEventListener(new ValueEventListener() {
+             //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono lso if´s de dentro
+            mDatabase.child("Usuarios").child(id).child(dificultad).addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Partida post = dataSnapshot.getValue(Partida.class);
-                    System.out.println(post);
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Partida partida = dataSnapshot.getValue(Partida.class);
+
+                    if(partida == null && primeraInserccion[0]){
+                        partida = new Partida();
+                        partida.setDificultad(dificultad);
+                        partida.setNumeroPartidas(1);
+                        partida.setNumeroPartidasGanadas(1);
+                        primeraInserccion[0] = false;
+                    }else
+                        if(partida != null && primeraInserccion[0]){
+                        partida.setNumeroPartidas(partida.getNumeroPartidas()+1);
+                        partida.setNumeroPartidasGanadas(partida.getNumeroPartidasGanadas()+1);
+                        primeraInserccion[0] = false;
+                        }
+
+                    mDatabase.child("Usuarios").child(id).child(partida.getDificultad()).setValue(partida);
                 }
 
                 @Override
@@ -250,16 +298,6 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
                 }
             });
-
-            mDatabase.child("Usuarios").child(id).getKey();
-            Partida partida = new Partida();
-            partida.setDificultad(dificultad);
-            partida.setNumeroPartidas(1);
-            partida.setNumeroPartidasGanadas(1);
-
-
-
-            mDatabase.child("Usuarios").child(id).child(partida.getID()).setValue(partida);
 
             //------------------------------------------------------------------
         }

@@ -2,18 +2,93 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
+
+    <RadioGroup
+        android:id="@+id/RGFiltrarDificultad"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/Facil"
+            android:text="Facil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"/>
+
+        <RadioButton
+            android:id="@+id/Medio"
+            android:text="Medio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"/>
+
+        <RadioButton
+            android:id="@+id/Dificil"
+            android:text="Dificil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"/>
+
+        <RadioButton
+            android:id="@+id/Extremo"
+            android:text="Extremo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="33"/>
+    </RadioGroup>
+
 
     <TextView
-        android:id="@+id/text_notifications"
-        android:layout_width="match_parent"
+        android:id="@+id/titulonick"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:layout_marginStart="32dp"
+        android:text="Nick"
+        android:textColor="#fff"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"
+        android:paddingTop="20dp"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/RGFiltrarDificultad" />
+
+    <TextView
+        android:id="@+id/titulopartidaJugadas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:text="PJ"
+        android:textColor="#fff"
+        android:paddingTop="20dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/titulonick"
+        app:layout_constraintTop_toBottomOf="@id/RGFiltrarDificultad" />
+
+    <TextView
+        android:id="@+id/titulopartidasGanadas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:text="PG"
+        android:paddingTop="20dp"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/titulopartidaJugadas"
+        app:layout_constraintTop_toBottomOf="@id/RGFiltrarDificultad" />
+
+        <ListView
+            android:id="@+id/lista"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/titulonick"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
