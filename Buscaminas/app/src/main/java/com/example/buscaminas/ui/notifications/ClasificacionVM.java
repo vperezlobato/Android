@@ -21,6 +21,7 @@ public class ClasificacionVM extends ViewModel {
 
     private MutableLiveData<ArrayList<Partida>> listaPartidas;
     private DatabaseReference mDatabase;
+    private MutableLiveData<ArrayList<Partida>> listaPartidasAux;
 
     //Constructor por defecto
     public ClasificacionVM() {
@@ -28,12 +29,20 @@ public class ClasificacionVM extends ViewModel {
     }
 
     //Propiedades publicas
-    public LiveData<ArrayList<Partida>> getListaPartidas() {
+    public MutableLiveData<ArrayList<Partida>> getListaPartidas() {
         if (listaPartidas == null) {
             listaPartidas = new MutableLiveData<>();
-            cargarListadoPartidas();
         }
         return listaPartidas;
+    }
+
+    public MutableLiveData<ArrayList<Partida>> getListaPartidasAux() {
+        if(listaPartidasAux == null){
+            listaPartidasAux = new MutableLiveData<>();
+            cargarListadoPartidas();
+        }
+
+        return listaPartidasAux;
     }
 
     private void cargarListadoPartidas() {
@@ -53,13 +62,11 @@ public class ClasificacionVM extends ViewModel {
                             }
                     }
                 }
+                listaPartidasAux.setValue(partidasAux);
 
-                listaPartidas.setValue(partidasAux);
-
-                //Ordenamos por fecha, asi la mas reciente sale primero
-                Collections.sort(listaPartidas.getValue(), new Comparator<Partida>() {
-                    public int compare(Partida o1, Partida o2) {
-                        return o1.getNumeroPartidasGanadas() - (o2.getNumeroPartidasGanadas());
+                Collections.sort(listaPartidasAux.getValue(), new Comparator<Partida>() {
+                    public int compare(Partida partida1, Partida partida2) {
+                        return partida1.getNumeroPartidasGanadas() + (partida2.getNumeroPartidasGanadas());
                     }
                 });
             }
@@ -70,4 +77,22 @@ public class ClasificacionVM extends ViewModel {
             }
         });
     }
+
+    public void filtrarPorDificultad(String dificultad)
+    {
+        ArrayList<Partida> listaPartidas = new ArrayList<Partida>();
+        if(getListaPartidasAux().getValue() != null){
+            for (Partida partida : getListaPartidasAux().getValue()) {
+
+                if (partida.getDificultad().equals(dificultad))
+                    listaPartidas.add(partida);
+
+            }
+            getListaPartidas().setValue(listaPartidas);
+        }
+
+
+
+    }
+
 }
