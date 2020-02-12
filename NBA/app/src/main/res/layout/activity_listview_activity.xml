@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+<LinearLayout
+    android:id="@+id/layout"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TextView
+            android:id="@+id/texto"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"/>
+        <TextView
+            android:id="@+id/abreviacion"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_below="@id/texto"/>
+
+        <TextView
+            android:id="@+id/nombreSimple"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_toRightOf="@id/abreviacion"
+            android:layout_below="@id/texto"/>
+
+        <TextView
+            android:id="@+id/localizacion"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_toRightOf="@id/nombreSimple"
+            android:layout_below="@id/texto"/>
+            />
+    </RelativeLayout>
+</LinearLayout>
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_alignParentEnd="true"
+        />
+
+</RelativeLayout>

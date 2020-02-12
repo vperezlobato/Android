@@ -1,0 +1,107 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.activity_introducir_equipo"><![CDATA[
+
+    />
+
+
+
+
+
+
+
+    ]]>
+
+    <TextView
+        android:id="@+id/introducirNombreEquipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="40dp"
+        android:text="Nombre del equipo:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/introducirNombreEquipoEscrito"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/introducirNombreEquipo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/introducirNombreSimple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="72dp"
+        android:text="Nombre Simple:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/introducirNombreEquipo" />
+
+    <EditText
+        android:id="@+id/introducirNombreSimpleEscrito"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="36dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/introducirNombreSimple"
+        app:layout_constraintTop_toBottomOf="@+id/introducirNombreEquipoEscrito" />
+
+    <TextView
+        android:id="@+id/introducirAbreviacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="48dp"
+        android:text="Abreviacion:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/introducirNombreSimple" />
+
+    <EditText
+        android:id="@+id/introducirAbreviacionEscrita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="32dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/introducirAbreviacion"
+        app:layout_constraintTop_toBottomOf="@+id/introducirNombreSimpleEscrito" />
+
+    <TextView
+        android:id="@+id/introducirLocalizacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="44dp"
+        android:text="Localizacion:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/introducirAbreviacion" />
+
+    <EditText
+        android:id="@+id/introducirLocalizacionEscrita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/introducirLocalizacion"
+        app:layout_constraintTop_toBottomOf="@+id/introducirAbreviacionEscrita" />
+
+    <Button
+        android:id="@+id/botonInsertarEquipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="380dp"
+        android:text="Introducir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

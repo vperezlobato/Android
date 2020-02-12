@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="152dp"
+        tools:layout_editor_absoluteY="100dp">
+
+        <TextView
+            android:id="@+id/texto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hola Mundo" />
+
+        <CheckBox
+            android:id="@+id/negrita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Texto negrita" />
+
+        <CheckBox
+            android:id="@+id/grande"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tamaño de fuente gigantesca" />
+
+        <CheckBox
+            android:id="@+id/pequena"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tamaño de fuente minuscula " />
+
+        <CheckBox
+            android:id="@+id/rojo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Color rojo" />
+
+        <Button
+            android:id="@+id/aplicar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="aplicarCambios"
+            android:text="aplicar" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

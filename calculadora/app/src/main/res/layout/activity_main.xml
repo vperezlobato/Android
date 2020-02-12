@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/texto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gridLayout"
+        android:layout_marginBottom="100dp"
+        android:height="100dp"
+        android:textAlignment="textEnd"
+        android:textColor="#F7000000"
+        android:textSize="35dp" />
+
+    <TextView
+        android:id="@+id/resultado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gridLayout"
+        android:layout_marginBottom="100dp"
+        android:height="100dp"
+        android:textAlignment="textEnd"
+        android:textColor="#F7000000"
+        android:textSize="35dp" />
+
+    <Button
+        android:id="@+id/limpiar"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_above="@+id/gridLayout"
+        android:layout_alignStart="@+id/gridLayout"
+        android:layout_alignEnd="@+id/gridLayout"
+        android:layout_marginEnd="175dp"
+        android:onClick="limpiar"
+        android:text="AC" />
+
+
+    <Button
+        android:id="@+id/borrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_above="@+id/gridLayout"
+        android:layout_alignStart="@+id/gridLayout"
+        android:layout_alignEnd="@+id/gridLayout"
+        android:layout_marginStart="177dp"
+        android:onClick="borrar"
+        android:text="DEL" />
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:columnCount="4"
+        android:rowCount="6"
+        android:layout_centerHorizontal="true">
+
+    <Button
+        android:id="@+id/btn7"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:onClick="numeroSiete"
+        android:text="7" />
+
+
+    <Button
+        android:id="@+id/btn8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:text="8"
+        android:onClick="numeroOcho"/>
+
+    <Button
+        android:id="@+id/btn4"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="2"
+        android:text="4"
+        android:onClick="numeroCuatro"/>
+
+    <Button
+        android:id="@+id/btn5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="2"
+        android:text="5"
+        android:onClick="numeroCinco"/>
+
+    <Button
+        android:id="@+id/btn6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:layout_row="2"
+        android:text="6"
+        android:onClick="numeroSeis"/>
+
+    <Button
+        android:id="@+id/btnMultiplicar"
+        android:layout_column="3"
+        android:layout_gravity="fill"
+        android:layout_row="2"
+        android:gravity="center"
+        android:text="×"
+        android:onClick="multiplicar"/>
+
+    <Button
+        android:id="@+id/btnDivision"
+        android:layout_column="3"
+        android:layout_gravity="fill_horizontal"
+        android:layout_row="1"
+        android:text="÷"
+        android:onClick="dividir"/>
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_column="0"
+        android:layout_row="3"
+        android:text="1"
+        android:onClick="numeroUno"/>
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="3"
+        android:text="2"
+        android:onClick="numeroDos"/>
+
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:layout_row="3"
+        android:text="3"
+        android:onClick="numeroTres"/>
+
+    <Button
+        android:id="@+id/btnMenos"
+        android:layout_column="3"
+        android:layout_gravity="fill_horizontal"
+        android:layout_row="3"
+        android:gravity="center"
+        android:text="-"
+        android:onClick="menos"/>
+
+    <Button
+        android:id="@+id/btnPunto"
+        android:layout_height="wrap_content"
+        android:layout_row="4"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="."
+        android:onClick="punto"/>
+
+    <Button
+        android:id="@+id/btn0"
+        android:layout_column="1"
+        android:layout_row="4"
+        android:text="0"
+        android:onClick="numeroCero"/>
+
+    <Button
+        android:id="@+id/btnIgual"
+        android:layout_column="2"
+        android:layout_gravity="fill_horizontal"
+        android:layout_row="4"
+        android:text="="
+        android:onClick="igual"/>
+
+    <Button
+        android:id="@+id/btnSuma"
+        android:layout_column="3"
+        android:layout_gravity="fill_horizontal"
+        android:layout_row="4"
+        android:text="+"
+        android:onClick="suma"/>
+
+    <Button
+        android:id="@+id/btn9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="2"
+        android:text="9"
+        android:onClick="numeroNueve"/>
+
+    </GridLayout>
+</RelativeLayout>

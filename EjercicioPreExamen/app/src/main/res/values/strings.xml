@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">preexamen</string>
+    <string name="borrar">Borrar</string>
+    <string name="editar">Editar</string>
+    <string name="nueva_posicion">Nueva Posicion</string>
+    <string name="clonar">Clonar</string>
+    <string name="guardar">Guardar</string>
+    <string name="puntos">Puntos</string>
+    <string name="rebotes">Rebotes</string>
+    <string name="guardar_posicion">Guardar posicion</string>
+</resources>
