@@ -1,4 +1,6 @@
-package com.example.buscaminas;
+package com.example.buscaminas.Clases;
+
+import com.example.buscaminas.R;
 
 public class clsCasilla {
 
@@ -9,6 +11,7 @@ public class clsCasilla {
     private int id;
     private int numero;
     private int posX,posY;
+
     public clsCasilla(){
         esBomba = false;
         banderaPuesta = false;

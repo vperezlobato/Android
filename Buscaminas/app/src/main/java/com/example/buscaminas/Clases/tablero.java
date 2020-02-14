@@ -1,4 +1,6 @@
-package com.example.buscaminas;
+package com.example.buscaminas.Clases;
+
+import com.example.buscaminas.Clases.clsCasilla;
 
 public class tablero {
 

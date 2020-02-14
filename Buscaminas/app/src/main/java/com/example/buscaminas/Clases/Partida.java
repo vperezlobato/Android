@@ -1,4 +1,4 @@
-package com.example.buscaminas;
+package com.example.buscaminas.Clases;
 
 import java.util.Random;
 

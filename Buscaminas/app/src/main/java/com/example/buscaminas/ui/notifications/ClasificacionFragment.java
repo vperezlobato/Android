@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.buscaminas.Adapter.listaClasificacionAdapter;
-import com.example.buscaminas.Partida;
+import com.example.buscaminas.Clases.Partida;
 import com.example.buscaminas.R;
 
 import java.util.ArrayList;

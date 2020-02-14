@@ -1,11 +1,13 @@
-package com.example.buscaminas;
+package com.example.buscaminas.ViewModelJuego;
 
 import androidx.lifecycle.ViewModel;
+
+import com.example.buscaminas.Clases.tablero;
 
 public class ViewModelJuego extends ViewModel {
 
     private int numeroMinas;
-    private tablero tablero;
+    private com.example.buscaminas.Clases.tablero tablero;
     private int altura;
     private int ancho;
     private boolean jugando;

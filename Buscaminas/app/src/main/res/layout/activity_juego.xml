@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Activities.JuegoActivity"
     android:background="@drawable/gradient">
-
     <View
         android:id="@+id/gridFrame"
         android:layout_width="0dp"

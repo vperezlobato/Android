@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.buscaminas.Partida;
+import com.example.buscaminas.Clases.Partida;
 import com.example.buscaminas.R;
 
 import java.util.ArrayList;

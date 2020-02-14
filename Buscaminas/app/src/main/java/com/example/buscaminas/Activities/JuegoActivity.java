@@ -1,48 +1,35 @@
 package com.example.buscaminas.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.Layout;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Chronometer;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.buscaminas.Partida;
+import com.example.buscaminas.Clases.Partida;
 import com.example.buscaminas.R;
-import com.example.buscaminas.ViewModelJuego;
-import com.example.buscaminas.clsCasilla;
-import com.example.buscaminas.tablero;
+import com.example.buscaminas.ViewModelJuego.ViewModelJuego;
+import com.example.buscaminas.Clases.clsCasilla;
+import com.example.buscaminas.Clases.tablero;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JuegoActivity extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener{
 
@@ -71,7 +58,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = mAuth.getCurrentUser();
-
+        //MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw);
         vm = ViewModelProviders.of(this).get(ViewModelJuego.class);
         Intent intent = getIntent();
         dificultad = intent.getStringExtra("dificultad");
@@ -85,7 +72,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             case "Nivel Medio":
                 vm.setAltura(8);
                 vm.setAncho(8);
-                vm.setNumeroMinas(16);
+                vm.setNumeroMinas(10);
                 break;
             case "Nivel Dificil":
                 vm.setAltura(16);
@@ -153,6 +140,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
                 lp = new ConstraintLayout.LayoutParams(ConstraintSet.MATCH_CONSTRAINT,
                         ConstraintSet.MATCH_CONSTRAINT);
+
                 id = View.generateViewId();
                 vm.getTablero().getTablero()[iRow][iCol].setId(id);
                 idArray[iRow][iCol] = id;
@@ -163,7 +151,6 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 layout.addView(imageView, lp);
             }
         }
-
         // Create horizontal chain for each row and set the 1:1 dimensions.
         // but first make sure the layout frame has the right ratio set.
         cs.clone(layout);
