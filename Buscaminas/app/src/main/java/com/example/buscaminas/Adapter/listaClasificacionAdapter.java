@@ -48,6 +48,7 @@ public class listaClasificacionAdapter extends BaseAdapter {
         TextView titulonick;
         TextView partidasGanadas;
         TextView partidasJugadas;
+        TextView numeroClasificacion;
         ViewholderLista holder;
         View row = convertView;
 
@@ -60,7 +61,8 @@ public class listaClasificacionAdapter extends BaseAdapter {
             titulonick = row.findViewById(R.id.nick);
             partidasGanadas = row.findViewById(R.id.partidasGanadas);
             partidasJugadas = row.findViewById(R.id.partidasJugadas);
-            holder = new ViewholderLista( partidasGanadas,partidasJugadas,titulonick);
+            numeroClasificacion = row.findViewById(R.id.numeroClasificacion);
+            holder = new ViewholderLista( partidasGanadas,partidasJugadas,titulonick, numeroClasificacion);
 
             row.setTag(holder);
         }else{
@@ -71,6 +73,7 @@ public class listaClasificacionAdapter extends BaseAdapter {
             holder.getNick().setText(partida.getUsuario());
             holder.getPartidasGanadas().setText(String.valueOf(partida.getNumeroPartidasGanadas()));
             holder.getPartidasJugadas().setText(String.valueOf(partida.getNumeroPartidas()));
+            holder.getNumero().setText(String.valueOf(position+1));
         }
         return row;
     }

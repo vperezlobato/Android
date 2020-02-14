@@ -39,8 +39,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_rounded"
         android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
+
         android:padding="16dp"
-        android:text="@string/title_Jugar"
+        android:text="Jugar"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

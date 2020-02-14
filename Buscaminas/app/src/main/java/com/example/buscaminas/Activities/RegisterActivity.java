@@ -3,6 +3,7 @@ package com.example.buscaminas.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private String txtEmail,txtUsuario,txtPassword, txtConfirmPassword;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         confirmPassword = findViewById(R.id.editRegisterConfirmacionContrasena);
         registrar = findViewById(R.id.btnRegisterRegister);
         alreadyHaveAcc = findViewById(R.id.textAlreadyHave);
-
+        progressDialog = new ProgressDialog(this);
         alreadyHaveAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +79,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void registerUser(){
+        progressDialog.setMessage("Se estan procesando los datos, por favor espere.");
+        progressDialog.show();
         mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -96,7 +101,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         }
                     });
                 }else
-                    Toast.makeText(RegisterActivity.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
+                if (task.getException() instanceof FirebaseAuthUserCollisionException) {//si ya existe
+                    Toast.makeText(RegisterActivity.this, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "No se pudo registrar el usuario ", Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
             }
         });
 

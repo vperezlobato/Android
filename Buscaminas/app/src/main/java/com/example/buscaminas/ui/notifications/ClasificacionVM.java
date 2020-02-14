@@ -22,10 +22,20 @@ public class ClasificacionVM extends ViewModel {
     private MutableLiveData<ArrayList<Partida>> listaPartidas;
     private DatabaseReference mDatabase;
     private MutableLiveData<ArrayList<Partida>> listaPartidasAux;
+    private String dificultad;
 
     //Constructor por defecto
     public ClasificacionVM() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        dificultad = "";
+    }
+
+    public String getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
     }
 
     //Propiedades publicas
@@ -66,7 +76,7 @@ public class ClasificacionVM extends ViewModel {
 
                 Collections.sort(listaPartidasAux.getValue(), new Comparator<Partida>() {
                     public int compare(Partida partida1, Partida partida2) {
-                        return partida1.getNumeroPartidasGanadas() + (partida2.getNumeroPartidasGanadas());
+                        return new Integer(partida2.getNumeroPartidasGanadas()).compareTo(new Integer(partida1.getNumeroPartidasGanadas()));
                     }
                 });
             }

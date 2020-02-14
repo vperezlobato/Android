@@ -85,7 +85,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             case "Nivel Medio":
                 vm.setAltura(8);
                 vm.setAncho(8);
-                vm.setNumeroMinas(1);
+                vm.setNumeroMinas(16);
                 break;
             case "Nivel Dificil":
                 vm.setAltura(16);

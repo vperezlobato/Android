@@ -46,6 +46,7 @@ public class ClasificacionFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<Partida> listContact) {
                 //Actualizar la UI
+                lista.invalidate();
                 adapter = new listaClasificacionAdapter(getActivity(), vm.getListaPartidas().getValue() );
                 lista.setAdapter(adapter);
             }
@@ -58,6 +59,7 @@ public class ClasificacionFragment extends Fragment {
             public void onChanged(ArrayList<Partida> listContact) {
                 //Actualizar la UI
                 vm.getListaPartidasAux().getValue();
+                vm.filtrarPorDificultad(vm.getDificultad());
             }
         };
         vm.getListaPartidasAux().observe(getActivity(), lista2Observer);
@@ -69,16 +71,21 @@ public class ClasificacionFragment extends Fragment {
             {
                 switch (RGfiltraDificultad.getCheckedRadioButtonId()) {
                     case R.id.Facil:
-                        vm.filtrarPorDificultad("Nivel Facil");
+                        vm.filtrarPorDificultad("Nivel Facil");//probablemente no sea necesario pero lo he dejado asi para evitar problemas
+                        vm.setDificultad("Nivel Facil");//esto se lo añadi para que si dejas pulsado el checkbox
+                                                        // y juegas una partida se realice el cambio en la lista y se pueda ver reflejado al cambiar de fragment
                         break;
                     case R.id.Medio:
                         vm.filtrarPorDificultad("Nivel Medio");
+                        vm.setDificultad("Nivel Medio");
                         break;
                     case R.id.Dificil:
                         vm.filtrarPorDificultad("Nivel Dificil");
+                        vm.setDificultad("Nivel Dificil");
                         break;
                     case R.id.Extremo:
                         vm.filtrarPorDificultad("Nivel Extremo");
+                        vm.setDificultad("Nivel Extremo");
                         break;
                 }
             }

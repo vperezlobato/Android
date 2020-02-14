@@ -3,6 +3,7 @@ package com.example.buscaminas.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView accOlvidada;
     private String email, contrasena;
     private FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-
+        progressDialog = new ProgressDialog(this);
         if(user != null){
             finish();
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -91,20 +93,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void iniciarSesion(){
+        progressDialog.setMessage("Comprobando credenciales, por favor espere.");
+        progressDialog.show();
         mAuth.signInWithEmailAndPassword(editEmail.getText().toString().trim(),editContrasena.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                     finish();
-                }else
-                    Toast.makeText(LoginActivity.this, "No se pudo iniciar sesion", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(LoginActivity.this, "No se pudo iniciar sesion", Toast.LENGTH_LONG).show();
+                    progressDialog.cancel();}
             }
         });
 
     }
-
-
-
 
 }
