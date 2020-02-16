@@ -18,8 +18,7 @@
             android:text="Facil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="33"
-            android:checked="true"/>
+            android:layout_weight="33"/>
 
         <RadioButton
             android:id="@+id/Medio"

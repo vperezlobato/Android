@@ -7,11 +7,13 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.buscaminas.Clases.Partida;
+import com.example.buscaminas.ManejadorJuego;
 import com.example.buscaminas.R;
 import com.example.buscaminas.ViewModelJuego.ViewModelJuego;
 import com.example.buscaminas.Clases.clsCasilla;
@@ -44,12 +47,20 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private FirebaseUser user;
-
+    private MediaPlayer mediaPlayer;
+    private ManejadorJuego mj;
+    private boolean desactivarSonido;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_juego);
+
+        mj = new ManejadorJuego();
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("MyDesactivarSonidoPref",MODE_PRIVATE);
+        editor = prefs.edit();
+        desactivarSonido = prefs.getBoolean("sonidoDesactivar",false);
 
         cronometro = findViewById(R.id.cronometro);
         minas = findViewById(R.id.numeroMinas);
@@ -58,7 +69,6 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = mAuth.getCurrentUser();
-        //MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw);
         vm = ViewModelProviders.of(this).get(ViewModelJuego.class);
         Intent intent = getIntent();
         dificultad = intent.getStringExtra("dificultad");
@@ -111,6 +121,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
                 vm.crearPartida();
+                mediaPlayer.stop();
                 pintarTablero();
                 minas.setText(String.valueOf(vm.getNumeroMinas()));
                 carita.setImageResource(R.drawable.caritasonriente);
@@ -122,10 +133,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-
-
     public void pintarTablero(){
-
 
         ImageView imageView;
         ConstraintLayout.LayoutParams lp;
@@ -180,21 +188,33 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         ImageView casillaSeleccionada = (ImageView)v;
-        clsCasilla casilla = obtenerCasilla(vm.getTablero(),v.getId());
-        empezarCronometro();
+        clsCasilla casilla = mj.obtenerCasilla(vm.getTablero(),v.getId());
+        mj.empezarCronometro(vm,cronometro);
 
         if(vm.isJugando()){
             if(!casilla.getBanderaPuesta()) {
                 if (!casilla.getYaPulsada()) {
                     if (casilla.getEsBomba()) {
-                       perder(casilla);
+                        if(!desactivarSonido) {
+                            mediaPlayer = MediaPlayer.create(this, R.raw.explosion);
+                            mediaPlayer.start();
+                        }
+                        perder(casilla);
                     } else {
                         if(casilla.getNumero() == 0){
                             mostrarCasillasAlrededor(casilla.getPosX(),casilla.getPosY());
+                            if(!desactivarSonido) {
+                                mediaPlayer = MediaPlayer.create(this, R.raw.limpiarvariascasilla);
+                                mediaPlayer.start();
+                            }
                             victoria();
                         }else {
-                            ponerleImagenDeNumeroAlaCasilla(casillaSeleccionada, casilla);
+                            mj.ponerleImagenDeNumeroAlaCasilla(casillaSeleccionada, casilla);
                             casilla.setYaPulsada(true);
+                            if(!desactivarSonido) {
+                                mediaPlayer = MediaPlayer.create(this, R.raw.limpiarunacasilla);
+                                mediaPlayer.start();
+                            }
                             victoria();
                         }
 
@@ -206,24 +226,23 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
     private void perder(clsCasilla casilla) {
         vm.setJugando(false);
-        mostrarMinas(casilla.getPosX(),casilla.getPosY());
+        mostrarMinas(casilla.getPosX(), casilla.getPosY());
         cronometro.stop();
         carita.setImageResource(R.drawable.caritaperdedor);
         final String id = user.getUid();
-        final boolean[] primeraInserccion = {true}; //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono lso if´s de dentro
+        final boolean[] primeraInserccion = {true}; //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono los if´s de dentro
         mDatabase.child("Usuarios").child(id).child(dificultad).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Partida partida = dataSnapshot.getValue(Partida.class);
 
-                if(partida == null && primeraInserccion[0]){
+                if (partida == null && primeraInserccion[0]) {
                     partida = new Partida();
                     partida.setDificultad(dificultad);
                     partida.setNumeroPartidas(1);
                     primeraInserccion[0] = false;
-                }else
-                if(partida != null && primeraInserccion[0]){
-                    partida.setNumeroPartidas(partida.getNumeroPartidas()+1);
+                } else if (partida != null && primeraInserccion[0]) {
+                    partida.setNumeroPartidas(partida.getNumeroPartidas() + 1);
                     primeraInserccion[0] = false;
                 }
 
@@ -255,6 +274,16 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         if(numeroDeCasillaSinMinas == contadorCasillasMostradas) {
             carita.setImageResource(R.drawable.caritaganador);
             Toast.makeText(this, "Has ganado!", Toast.LENGTH_SHORT).show();
+            if(!desactivarSonido) {
+                if (dificultad.equals("Nivel Extremo")) {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.triunfoextremo);
+                    mediaPlayer.start();
+                } else {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.ganar);
+                    mediaPlayer.start();
+                }
+            }
+
             cronometro.stop();
             vm.setJugando(false);
             //-----------------------------------------------------------------
@@ -290,12 +319,15 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    //Este metodo es recursivo y se encarga de descubrir las casillas en funcion de la casilla pulsada
+    //por lo que si pulsamos una casilla sin numero mostrara a su alrededor las que no sean bomba y
+    //si encontrara una bomba dejaria de seguir mirando a la siguiente casilla y mostraria el numero de esta
     private void mostrarCasillasAlrededor(int posX, int posY) {
         ImageView imagen;
         if (posX >= 0 && posX < vm.getAltura() && posY >= 0 && posY < vm.getAncho() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta()) {
             if (vm.getTablero().getTablero()[posX][posY].getNumero() == 0) {
                 imagen = findViewById(vm.getTablero().getTablero()[posX][posY].getId());
-                ponerleImagenDeNumeroAlaCasilla(imagen, vm.getTablero().getTablero()[posX][posY]);
+                mj.ponerleImagenDeNumeroAlaCasilla(imagen, vm.getTablero().getTablero()[posX][posY]);
                 vm.getTablero().getTablero()[posX][posY].setYaPulsada(true);
                 vm.getTablero().getTablero()[posX][posY].setNumero(50);
                 mostrarCasillasAlrededor(posX, posY + 1);
@@ -309,15 +341,16 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
             } else if (vm.getTablero().getTablero()[posX][posY].getNumero() >= 1 && !vm.getTablero().getTablero()[posX][posY].getEsBomba() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta()) {
                 imagen = findViewById(vm.getTablero().getTablero()[posX][posY].getId());
-                ponerleImagenDeNumeroAlaCasilla(imagen, vm.getTablero().getTablero()[posX][posY]);
+                mj.ponerleImagenDeNumeroAlaCasilla(imagen, vm.getTablero().getTablero()[posX][posY]);
                 vm.getTablero().getTablero()[posX][posY].setYaPulsada(true);
             }
         }
     }
 
+    //Este metodo muestra todas las minas del tablero una vez se haya perdido
     private void mostrarMinas(int posX,int posY) {
         ImageView imagen;
-        
+
         for(int i = 0; i < vm.getAltura();i++){
             for(int j = 0; j< vm.getAncho();j++){
                 if(vm.getTablero().getTablero()[i][j].getEsBomba() && vm.getTablero().getTablero()[i][j].getBanderaPuesta()) {
@@ -337,64 +370,21 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void ponerleImagenDeNumeroAlaCasilla(ImageView casillaSeleccionada,clsCasilla casilla){
-
-        switch (casilla.getNumero()) {
-            case 0:
-                casillaSeleccionada.setImageResource(R.drawable.nobomba);
-                break;
-            case 1:
-                casillaSeleccionada.setImageResource(R.drawable.numero1);
-                break;
-            case 2:
-                casillaSeleccionada.setImageResource(R.drawable.numero2);
-                break;
-            case 3:
-                casillaSeleccionada.setImageResource(R.drawable.numero3);
-                break;
-            case 4:
-                casillaSeleccionada.setImageResource(R.drawable.numero4);
-                break;
-            case 5:
-                casillaSeleccionada.setImageResource(R.drawable.numero5);
-                break;
-            case 6:
-                casillaSeleccionada.setImageResource(R.drawable.numero6);
-                break;
-            case 7:
-                casillaSeleccionada.setImageResource(R.drawable.numero7);
-                break;
-            case 8:
-                casillaSeleccionada.setImageResource(R.drawable.numero8);
-                break;
-
-        }
-    }
-
-    public clsCasilla obtenerCasilla(tablero tablero,int id){
-        clsCasilla casilla = new clsCasilla();
-
-        for(int i = 0;i < tablero.getAltura(); i++){
-            for(int j = 0; j < tablero.getAncho(); j++){
-                if(tablero.getTablero()[i][j].getId() == id){
-                    casilla = tablero.getTablero()[i][j];
-
-                }
-            }
-        }
-        return casilla;
-    }
-
+    //Con este longclick se pondran y quitaran banderas
     @Override
     public boolean onLongClick(View v) {
         ImageView casillaSeleccionada = (ImageView)v;
         boolean pulsoLargo = false;
-        clsCasilla casilla = obtenerCasilla(vm.getTablero(),v.getId());
+        clsCasilla casilla = mj.obtenerCasilla(vm.getTablero(),v.getId());
         if(vm.isJugando()){
-            empezarCronometro();
+            mj.empezarCronometro(vm,cronometro);
             if(!casilla.getBanderaPuesta()) {
                 if (!casilla.getYaPulsada()) {
                     casillaSeleccionada.setImageResource(R.drawable.bandera);
+                    if(!desactivarSonido) {
+                        mediaPlayer = MediaPlayer.create(this, R.raw.banderapuesta);
+                        mediaPlayer.start();
+                    }
                     casilla.setBanderaPuesta(true);
                     casilla.setYaPulsada(true);
                     vm.setNumeroMinas(vm.getNumeroMinas()-1);
@@ -403,6 +393,10 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 }
             }else{
                 casillaSeleccionada.setImageResource(R.drawable.casilla);
+                if(!desactivarSonido) {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.banderaquitada);
+                    mediaPlayer.start();
+                }
                 casilla.setBanderaPuesta(false);
                 casilla.setYaPulsada(false);
                 vm.setNumeroMinas(vm.getNumeroMinas()+1);
@@ -413,19 +407,54 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         return pulsoLargo;
     }
 
-    public void empezarCronometro(){
-        if(vm.isPrimerClick()){
-            cronometro.setBase(SystemClock.elapsedRealtime());
-            cronometro.start();
-            vm.setPrimerClick(false);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_nav_menu,menu);
+        MenuItem item = menu.findItem(R.id.desactivarSonido);
+
+        if(!desactivarSonido){
+            item.setTitle("Desactivar sonido");
+
+        }else
+            item.setTitle("Activar sonido");
+
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean itemSeleccionado = false;
+        switch(item.getItemId()){
+            case R.id.cerrarSesion:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(JuegoActivity.this,LoginActivity.class));
+                itemSeleccionado = true;
+                break;
+            case R.id.desactivarSonido:
+                if(item.getTitle().equals("Desactivar sonido")){
+                    mediaPlayer.pause();
+                    item.setTitle("Activar sonido");
+                    editor.putBoolean("sonidoDesactivar",true);
+                }else{
+                    desactivarSonido = false;
+                    item.setTitle("Desactivar sonido");
+                    editor.putBoolean("sonidoDesactivar",false);
+                }
+                break;
+
+        }
+        editor.commit();
+        return itemSeleccionado;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
 }

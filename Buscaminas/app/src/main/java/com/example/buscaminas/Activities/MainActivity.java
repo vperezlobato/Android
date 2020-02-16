@@ -1,7 +1,10 @@
 package com.example.buscaminas.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,13 +26,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private ViewPager viewPager;
     private DashboardFragment dashboardFragment;
     private ClasificacionFragment clasificacionFragment;
+    private MediaPlayer mediaPlayer;
+    private boolean desactivarSonido;
+    private Menu menu;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         bottomNavigationView  = findViewById(R.id.nav_view);
+
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("MyDesactivarSonidoPref",MODE_PRIVATE);
+        editor = prefs.edit();
+        desactivarSonido = prefs.getBoolean("sonidoDesactivar",false);
 
         viewPager = findViewById(R.id.viewpager);
 
@@ -48,6 +58,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         setupViewPager(viewPager);
+
+        if (!desactivarSonido) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.suspenso);
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+        }
     }
 
     @Override
@@ -82,6 +98,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_nav_menu,menu);
+        MenuItem item = menu.findItem(R.id.desactivarSonido);
+
+        if(!desactivarSonido){
+            item.setTitle("Desactivar sonido");
+
+        }else
+            item.setTitle("Activar sonido");
+
+        this.menu = menu;
         return true;
     }
 
@@ -95,8 +120,59 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
                 itemSeleccionado = true;
             break;
+            case R.id.desactivarSonido:
+                if(item.getTitle().equals("Desactivar sonido")){
+                    mediaPlayer.pause();
+                    item.setTitle("Activar sonido");
+                    editor.putBoolean("sonidoDesactivar",true);
+                }else{
+                    mediaPlayer = MediaPlayer.create(this, R.raw.suspenso);
+                    mediaPlayer.start();
+                    mediaPlayer.setLooping(true);
+                    item.setTitle("Desactivar sonido");
+                    editor.putBoolean("sonidoDesactivar",false);
+                }
+            break;
 
         }
+        editor.commit();
         return itemSeleccionado;
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("MyDesactivarSonidoPref",MODE_PRIVATE);
+        desactivarSonido = prefs.getBoolean("sonidoDesactivar",false);
+        if(menu != null){
+            MenuItem item = menu.findItem(R.id.desactivarSonido);
+            if (!desactivarSonido) {
+                item.setTitle("Desactivar sonido");
+                mediaPlayer = MediaPlayer.create(this, R.raw.suspenso);
+                mediaPlayer.start();
+                mediaPlayer.setLooping(true);
+            } else
+                item.setTitle("Activar sonido");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+
 }

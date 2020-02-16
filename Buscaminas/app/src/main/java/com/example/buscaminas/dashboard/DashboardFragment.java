@@ -34,7 +34,6 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
         spinner = root.findViewById(R.id.spinner);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,dificultades);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -6,4 +6,7 @@
     <item android:id="@+id/cerrarSesion"
         android:title="@string/title_CerrarSesion"
         app:showAsAction="never"></item>
+    <item android:id="@+id/desactivarSonido"
+        android:title="@string/title_desactivarSonido"
+        app:showAsAction="never"></item>
 </menu>
