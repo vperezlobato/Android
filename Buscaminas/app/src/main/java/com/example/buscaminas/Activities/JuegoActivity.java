@@ -434,7 +434,10 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.desactivarSonido:
                 if(item.getTitle().equals("Desactivar sonido")){
-                    mediaPlayer.pause();
+                    if(mediaPlayer != null) {
+                        mediaPlayer = null;
+                    }
+                    desactivarSonido = true;
                     item.setTitle("Activar sonido");
                     editor.putBoolean("sonidoDesactivar",true);
                 }else{
