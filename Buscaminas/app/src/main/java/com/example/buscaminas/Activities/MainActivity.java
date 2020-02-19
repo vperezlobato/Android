@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.buscaminas.R;
-import com.example.buscaminas.Adapter.ViewPagerAdapter;
-import com.example.buscaminas.dashboard.DashboardFragment;
-import com.example.buscaminas.ui.notifications.ClasificacionFragment;
+import com.example.buscaminas.Adapters.ViewPagerAdapter;
+import com.example.buscaminas.ZoomOutPageTransformer;
+import com.example.buscaminas.Play.PlayFragment;
+import com.example.buscaminas.ui.Clasificacion.ClasificacionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private BottomNavigationView bottomNavigationView ;
     private ViewPager viewPager;
-    private DashboardFragment dashboardFragment;
+    private PlayFragment playFragment;
     private ClasificacionFragment clasificacionFragment;
     private MediaPlayer mediaPlayer;
     private boolean desactivarSonido;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         desactivarSonido = prefs.getBoolean("sonidoDesactivar",false);
 
         viewPager = findViewById(R.id.viewpager);
-
+        viewPager.setPageTransformer(true,new ZoomOutPageTransformer());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
             }
@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        dashboardFragment=new DashboardFragment();
+        playFragment =new PlayFragment();
         clasificacionFragment = new ClasificacionFragment();
-        adapter.addFragment(dashboardFragment);
+        adapter.addFragment(playFragment);
         adapter.addFragment(clasificacionFragment);
         viewPager.setAdapter(adapter);
     }
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                overridePendingTransition(R.transition.fade_out, R.transition.fade_out);
                 itemSeleccionado = true;
             break;
             case R.id.desactivarSonido:

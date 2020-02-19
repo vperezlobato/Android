@@ -1,4 +1,4 @@
-package com.example.buscaminas.Adapter;
+package com.example.buscaminas.Adapters;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

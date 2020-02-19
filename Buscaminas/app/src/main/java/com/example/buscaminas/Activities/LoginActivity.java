@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             break;
             case R.id.btnRegister:
                 startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+                overridePendingTransition(R.transition.fade_in, R.transition.fade_out);
             break;
         }
 
@@ -100,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    overridePendingTransition(R.transition.fade_in, R.transition.fade_out);
                     finish();
                 }else{
                     Toast.makeText(LoginActivity.this, "No se pudo iniciar sesion", Toast.LENGTH_LONG).show();

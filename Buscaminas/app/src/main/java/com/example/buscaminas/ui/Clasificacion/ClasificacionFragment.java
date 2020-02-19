@@ -1,4 +1,4 @@
-package com.example.buscaminas.ui.notifications;
+package com.example.buscaminas.ui.Clasificacion;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.buscaminas.Adapter.listaClasificacionAdapter;
+import com.example.buscaminas.Adapters.listaClasificacionAdapter;
 import com.example.buscaminas.Clases.Partida;
 import com.example.buscaminas.R;
 
@@ -31,7 +31,7 @@ public class ClasificacionFragment extends Fragment {
     private RadioButton RBExtremo;
 
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
+        View root = inflater.inflate(R.layout.fragment_clasificacion, container, false);
         lista = root.findViewById(R.id.lista);
         RGfiltraDificultad =root.findViewById(R.id.RGFiltrarDificultad);
         RBFacil = root.findViewById(R.id.Facil);

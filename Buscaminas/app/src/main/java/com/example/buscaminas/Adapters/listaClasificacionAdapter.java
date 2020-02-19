@@ -1,4 +1,4 @@
-package com.example.buscaminas.Adapter;
+package com.example.buscaminas.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

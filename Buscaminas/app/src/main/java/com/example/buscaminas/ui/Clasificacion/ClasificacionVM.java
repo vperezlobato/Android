@@ -1,4 +1,4 @@
-package com.example.buscaminas.ui.notifications;
+package com.example.buscaminas.ui.Clasificacion;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;

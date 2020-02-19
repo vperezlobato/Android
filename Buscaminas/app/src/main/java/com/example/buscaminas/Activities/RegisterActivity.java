@@ -53,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+                overridePendingTransition(R.transition.fade_in, R.transition.fade_out);
             }
         });
 
@@ -96,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             if(task2.isSuccessful()){
                                 Toast.makeText(RegisterActivity.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
                                 finish();
+                                overridePendingTransition(R.transition.fade_in, R.transition.fade_out);
                             }else
                                 Toast.makeText(RegisterActivity.this, "No se han podido crear los datos correctamente", Toast.LENGTH_SHORT).show();
                         }
@@ -110,5 +112,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+    }
+
+    @Override
+    public void finish(){
+        super.finish();
+        overridePendingTransition(R.transition.fade_in, R.transition.fade_out);
     }
 }
