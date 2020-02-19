@@ -121,7 +121,9 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
                 vm.crearPartida();
-                mediaPlayer.stop();
+                if(mediaPlayer != null) {
+                    mediaPlayer.stop();
+                }
                 pintarTablero();
                 minas.setText(String.valueOf(vm.getNumeroMinas()));
                 carita.setImageResource(R.drawable.caritasonriente);
@@ -434,9 +436,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.desactivarSonido:
                 if(item.getTitle().equals("Desactivar sonido")){
-                    if(mediaPlayer != null) {
-                        mediaPlayer = null;
-                    }
+
+                    mediaPlayer.stop();
                     desactivarSonido = true;
                     item.setTitle("Activar sonido");
                     editor.putBoolean("sonidoDesactivar",true);
