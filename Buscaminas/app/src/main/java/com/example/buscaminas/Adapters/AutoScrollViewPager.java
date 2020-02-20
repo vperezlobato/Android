@@ -29,7 +29,7 @@ public class AutoScrollViewPager extends ViewPager
     private boolean stopScrollWhenTouch = true;
     private int slideBorderMode = SLIDE_BORDER_MODE_NONE;
     private boolean isBorderAnimation = true;
-    private double autoScrollFactor = 1.0;
+    private double autoScrollFactor = 4.0;
     private double swipeScrollFactor = 1.0;
     private Handler handler;
     @Nullable

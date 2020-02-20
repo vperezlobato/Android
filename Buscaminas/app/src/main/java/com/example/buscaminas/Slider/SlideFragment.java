@@ -16,12 +16,10 @@ import com.example.buscaminas.R;
 public class SlideFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private static final int[] PAGE_TITLES =
-            new int[]{ R.string.title_CerrarSesion, R.string.title_CerrarSesion, R.string.title_CerrarSesion,R.string.title_CerrarSesion};
     @StringRes
     private static final int[] PAGE_IMAGE =
             new int[]{
-                    R.drawable.imagenfacil, R.drawable.imagenmedio, R.drawable.imagendificil,R.drawable.imagenexperto
+                    R.drawable.modofacil, R.drawable.modomedio, R.drawable.mododificil,R.drawable.modoextremo
             };
     private SliderViewModel sliderViewModel;
 
@@ -49,12 +47,10 @@ public class SlideFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.imagen_viewpager, container, false);
-        final TextView textView = root.findViewById(R.id.section_label);
         final ImageView imageView = root.findViewById(R.id.imageView);
-        sliderViewModel.getText().observe(this, new Observer<Integer>() {
+        sliderViewModel.getText().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer index) {
-                textView.setText(PAGE_TITLES[index]);
                 imageView.setImageResource(PAGE_IMAGE[index]);
             }
         });

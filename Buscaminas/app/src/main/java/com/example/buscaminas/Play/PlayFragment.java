@@ -29,21 +29,22 @@ public class PlayFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_play, container, false);
         spinner = root.findViewById(R.id.spinner);
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_item,dificultades);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
-        AutoScrollPagerAdapter autoScrollPagerAdapter =
-                new AutoScrollPagerAdapter(getActivity().getSupportFragmentManager());
+        AutoScrollPagerAdapter autoScrollPagerAdapter = new AutoScrollPagerAdapter(getActivity().getSupportFragmentManager());
         AutoScrollViewPager viewPager = root.findViewById(R.id.pager);
         viewPager.setAdapter(autoScrollPagerAdapter);
+
         TabLayout tabs = root.findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        // start auto scroll
+
         viewPager.startAutoScroll();
-        // set auto scroll time in mili
+
         viewPager.setInterval(AUTO_SCROLL_THRESHOLD_IN_MILLI);
-        // enable recycling using true
+
         viewPager.setCycle(true);
 
 

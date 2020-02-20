@@ -12,12 +12,30 @@ public class AutoScrollPagerAdapter extends FragmentPagerAdapter {
     }
     @Override
     public Fragment getItem(int position) {
-        // Return a SlideFragment (defined as a static inner class below).
         return SlideFragment.newInstance(position + 1);
     }
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 4;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position){
+        CharSequence secuencia = "";
+        switch(position){
+            case 0:
+                secuencia = "Facil";
+            break;
+            case 1:
+                secuencia = "Medio";
+                break;
+            case 2:
+                secuencia = "Dificil";
+                break;
+            case 3:
+                secuencia = "Extremo";
+                break;
+        }
+        return secuencia;
     }
 }
