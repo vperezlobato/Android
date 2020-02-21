@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
             case R.id.navigation_Play:
                 viewPager.setCurrentItem(0);
+
                 pagActual = true;
             break;
 
