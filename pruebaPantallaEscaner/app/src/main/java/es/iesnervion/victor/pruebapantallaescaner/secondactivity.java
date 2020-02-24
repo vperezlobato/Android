@@ -1,14 +1,20 @@
 package es.iesnervion.victor.pruebapantallaescaner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
@@ -27,11 +33,34 @@ public class secondactivity extends AppCompatActivity {
     private DecoratedBarcodeView barcodeView;
     private BeepManager beepManager;
     private String lastText;
+    private LinearLayout bottomSheet;
 
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if(result.getText() == null || result.getText().equals(lastText)) {
+                // Prevent duplicate scans
+                return;
+            }
+            BottomSheetDialogFragment bsbFragment =
+                    MiBottomSheetDialogFragment.newInstance();
+            bsbFragment.show(secondactivity.this.getSupportFragmentManager(),"BSDialog");
+
+            beepManager.playBeepSoundAndVibrate();
+
+
+
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.continuous_scan);
 
         barcodeView = findViewById(R.id.barcode_scanner);
@@ -42,32 +71,9 @@ public class secondactivity extends AppCompatActivity {
 
         beepManager = new BeepManager(this);
 
+        bottomSheet = (LinearLayout)findViewById(R.id.bottomsheet);
 
     }
-
-    private BarcodeCallback callback = new BarcodeCallback() {
-        @Override
-        public void barcodeResult(BarcodeResult result) {
-            if(result.getText() == null || result.getText().equals(lastText)) {
-                // Prevent duplicate scans
-                return;
-            }
-
-            setContentView(R.layout.activity_secondactivity);
-            //lastText = result.getText();
-            //barcodeView.setStatusText(result.getText());
-
-            beepManager.playBeepSoundAndVibrate();
-
-            //Added preview of scanned barcode
-            //ImageView imageView = findViewById(R.id.barcodePreview);
-            //imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
-        }
-
-        @Override
-        public void possibleResultPoints(List<ResultPoint> resultPoints) {
-        }
-    };
 
     @Override
     protected void onResume() {
