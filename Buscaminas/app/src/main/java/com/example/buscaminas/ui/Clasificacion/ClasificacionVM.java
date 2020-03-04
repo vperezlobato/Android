@@ -54,16 +54,21 @@ public class ClasificacionVM extends ViewModel {
         return listaPartidasAux;
     }
 
+    //Este metodo llama a firebase y recoge los datos de las partidas de firebase
     private void cargarListadoPartidas() {
         String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase.child(currentUser);
         mDatabase.child("Usuarios").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 ArrayList<Partida> partidasAux = new ArrayList<>();
+
                 for (DataSnapshot usuario : dataSnapshot.getChildren()) {
                     for (DataSnapshot objSnapshot : usuario.getChildren()){
+
                             String user = usuario.child("usuario").getValue(String.class);
+
                             if(!objSnapshot.getKey().equals("usuario")){
                                 Partida partida = objSnapshot.getValue(Partida.class);
                                 partida.setUsuario(user);
@@ -73,6 +78,7 @@ public class ClasificacionVM extends ViewModel {
                 }
                 listaPartidasAux.setValue(partidasAux);
 
+                //Se ordena el listado de las partidas extraidas segun el numero de partidas ganadas
                 Collections.sort(listaPartidasAux.getValue(), new Comparator<Partida>() {
                     public int compare(Partida partida1, Partida partida2) {
                         return new Integer(partida2.getNumeroPartidasGanadas()).compareTo(new Integer(partida1.getNumeroPartidasGanadas()));
@@ -87,6 +93,7 @@ public class ClasificacionVM extends ViewModel {
         });
     }
 
+    //Este metrodo se usa para filtrar el listado de partidas segun la dificultad que sera escogida mediante un radiogrupo de radiobuttons
     public void filtrarPorDificultad(String dificultad)
     {
         ArrayList<Partida> listaPartidas = new ArrayList<Partida>();

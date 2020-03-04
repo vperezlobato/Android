@@ -49,6 +49,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registrar = findViewById(R.id.btnRegisterRegister);
         alreadyHaveAcc = findViewById(R.id.textAlreadyHave);
         progressDialog = new ProgressDialog(this);
+
+        //Metodo onclick que te envia directamente al login si pinchas en el label "Already have an account"
         alreadyHaveAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,9 +69,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         txtPassword = password.getText().toString();
         txtConfirmPassword = confirmPassword.getText().toString();
 
-        if(!txtEmail.isEmpty() && !txtUsuario.isEmpty() && !txtPassword.isEmpty() && !txtConfirmPassword.isEmpty()){
-            if(txtPassword.length() >= 6 && txtConfirmPassword.length() >= 6) {
-                if (txtPassword.equals(txtConfirmPassword)) {
+        if(!txtEmail.isEmpty() && !txtUsuario.isEmpty() && !txtPassword.isEmpty() && !txtConfirmPassword.isEmpty()){ //Si hay algun campo vacio no entra
+            if(txtPassword.length() >= 6 && txtConfirmPassword.length() >= 6) { //La password y la password de confirmacion deben tener 6 o mas caracteres o digitos
+                if (txtPassword.equals(txtConfirmPassword)) { //Si la password y la password de confirmacion son iguales
                     registerUser();
                 } else
                     Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
@@ -79,13 +81,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show();
     }
 
+    //Metodo para registrar un nuevo usuario en firebase
     public void registerUser(){
         progressDialog.setMessage("Se estan procesando los datos, por favor espere.");
         progressDialog.show();
         mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(),password.getText().toString().trim()).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if(task.isSuccessful()){ //Si lo ha registrado con exito guarda su nombre en firebase database
                     Map<String,Object> map = new HashMap<>();
                     map.put("usuario",txtUsuario);
 
@@ -103,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         }
                     });
                 }else
-                if (task.getException() instanceof FirebaseAuthUserCollisionException) {//si ya existe
+                if (task.getException() instanceof FirebaseAuthUserCollisionException) { //En el caso de que ya exista el correo con el que intenta registrarse
                     Toast.makeText(RegisterActivity.this, "Ya existe un usuario con ese email", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(RegisterActivity.this, "No se pudo registrar el usuario ", Toast.LENGTH_SHORT).show();

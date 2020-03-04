@@ -16,18 +16,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.buscaminas.Clases.Partida;
-import com.example.buscaminas.ManejadorJuego;
+import com.example.buscaminas.Manejadora.ManejadorJuego;
 import com.example.buscaminas.R;
 import com.example.buscaminas.ViewModelJuego.ViewModelJuego;
 import com.example.buscaminas.Clases.clsCasilla;
-import com.example.buscaminas.Clases.tablero;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -142,6 +140,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        //Esto se usa para cambiar la visibilidad del modo inmersivo
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
@@ -152,6 +151,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    //Este metodo sirve para pintar las casillas en el tablero, se le da a cada casilla un id y se le asigna un onclick y onLongClickListener
     public void pintarTablero(){
 
         ImageView imageView;
@@ -208,7 +208,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         ImageView casillaSeleccionada = (ImageView)v;
         clsCasilla casilla = mj.obtenerCasilla(vm.getTablero(),v.getId());
-        mj.empezarCronometro(vm,cronometro);
+        mj.empezarCronometro(vm,cronometro); //Cuando se hace click en cualquier casilla por primera vez en la partida comienza el cronometro
 
         if(vm.isJugando()){
             if(!casilla.getBanderaPuesta()) {
@@ -243,6 +243,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    //Este metodo sirve para saber si un jugador ha perdido, en caso de hacerlo suena una musica si esta el sonido activado, muestra un toast y actualiza firebase
     private void perder(clsCasilla casilla) {
         vm.setJugando(false);
         mostrarMinas(casilla.getPosX(), casilla.getPosY());
@@ -250,6 +251,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         carita.setImageResource(R.drawable.caritaperdedor);
         final String id = user.getUid();
         final boolean[] primeraInserccion = {true}; //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono los if´s de dentro
+
+        //Hace una llamada a firebase coge la partida segun la dificultad y la actualiza metiendole el numero de partidas jugadas y derrotas
         mDatabase.child("Usuarios").child(id).child(dificultad).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -276,9 +279,10 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(this, "Has perdido", Toast.LENGTH_SHORT).show();
     }
 
+    //Este metodo sirve para saber si un jugador ha ganado, en caso de hacerlo suena una musica si esta el sonido activado, muestra un toast y actualiza firebase
     private void victoria() {
         final String id = user.getUid();
-        final boolean[] primeraInserccion = {true};
+        final boolean[] primeraInserccion = {true}; //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono los if´s de dentro
 
         int numeroDeCasillaSinMinas = (vm.getAltura()*vm.getAncho()) - vm.getNumeroMinas();
         int contadorCasillasMostradas = 0;
@@ -290,11 +294,11 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
             }
         }
-        if(numeroDeCasillaSinMinas == contadorCasillasMostradas) {
+        if(numeroDeCasillaSinMinas == contadorCasillasMostradas) { //para saber si es una victoria lo que compruebo es el numero de casillas pulsadas con el numero de casillas sin minas
             carita.setImageResource(R.drawable.caritaganador);
             Toast.makeText(this, "Has ganado!", Toast.LENGTH_SHORT).show();
             if(!desactivarSonido) {
-                if (dificultad.equals("Nivel Extremo")) {
+                if (dificultad.equals("Nivel Extremo")) { //dependiendo de la dificultad el sonido de la victoria es diferente
                     mediaPlayer = MediaPlayer.create(this, R.raw.triunfoextremo);
                     mediaPlayer.start();
                 } else {
@@ -305,8 +309,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
 
             cronometro.stop();
             vm.setJugando(false);
-            //-----------------------------------------------------------------
-             //esto es un poco raro pero es la unica forma que he encontrado de controlar desde fuera del metodo asyncrono lso if´s de dentro
+
+            //Hace una llamada a firebase coge la partida segun la dificultad y la actualiza metiendole el numero de partidas jugadas y victorias
             mDatabase.child("Usuarios").child(id).child(dificultad).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -334,17 +338,25 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
                 }
             });
 
-            //------------------------------------------------------------------
         }
     }
 
-    //Este metodo es recursivo y se encarga de descubrir las casillas en funcion de la casilla pulsada
-    //por lo que si pulsamos una casilla sin numero mostrara a su alrededor las que no sean bomba y
-    //si encontrara una bomba dejaria de seguir mirando a la siguiente casilla y mostraria el numero de esta
+
+    /* Interfaz
+     * Comentario: //Este metodo es recursivo y se encarga de descubrir las casillas en funcion de la casilla pulsada
+                   //por lo que si pulsamos una casilla sin numero mostrara a su alrededor las que no sean bomba y
+                   //si encontrara una bomba dejaria de seguir mirando a la siguiente casilla y mostraria el numero de esta
+     * Precondiciones: las posiciones deben ser mayor o igual que 0
+     * Entradas:
+     *   -int posX
+     *   -int posY
+     * Salidas: No hay
+     * PostCondiciones: No devuelve nada, solo pintara por pantalla las casillas vacias o con numero
+     */
     private void mostrarCasillasAlrededor(int posX, int posY) {
         ImageView imagen;
-        if (posX >= 0 && posX < vm.getAltura() && posY >= 0 && posY < vm.getAncho() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta()) {
-            if (vm.getTablero().getTablero()[posX][posY].getNumero() == 0) {
+        if (posX >= 0 && posX < vm.getAltura() && posY >= 0 && posY < vm.getAncho() && !vm.getTablero().getTablero()[posX][posY].getBanderaPuesta()) { //Comprueba que se esta mirando dentro del tablero y que no es una bandera
+            if (vm.getTablero().getTablero()[posX][posY].getNumero() == 0) { //Si es una casilla que esta vacia
                 imagen = findViewById(vm.getTablero().getTablero()[posX][posY].getId());
                 mj.ponerleImagenDeNumeroAlaCasilla(imagen, vm.getTablero().getTablero()[posX][posY]);
                 vm.getTablero().getTablero()[posX][posY].setYaPulsada(true);
@@ -366,7 +378,15 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    //Este metodo muestra todas las minas del tablero una vez se haya perdido
+    /* Interfaz
+    * Comentario: Este metodo muestra todas las minas del tablero una vez se haya perdido
+    * Precondiciones: las posiciones deben ser mayor o igual que 0
+    * Entradas:
+    *   -int posX
+    *   -int posY
+    * Salidas: No hay
+    * PostCondiciones: No devuelve nada, solo pintara por pantalla todas las minas del tablero
+    */
     private void mostrarMinas(int posX,int posY) {
         ImageView imagen;
 
@@ -389,28 +409,28 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    //Con este longclick se pondran y quitaran banderas
+    //Con este longclick se pondran y quitaran las banderas de las casillas
     @Override
     public boolean onLongClick(View v) {
         ImageView casillaSeleccionada = (ImageView)v;
         boolean pulsoLargo = false;
         clsCasilla casilla = mj.obtenerCasilla(vm.getTablero(),v.getId());
-        if(vm.isJugando()){
-            mj.empezarCronometro(vm,cronometro);
-            if(!casilla.getBanderaPuesta()) {
-                if (!casilla.getYaPulsada()) {
-                    casillaSeleccionada.setImageResource(R.drawable.bandera);
-                    if(!desactivarSonido) {
+        if(vm.isJugando()){ //Si se esta jugando
+            mj.empezarCronometro(vm,cronometro); //empieza el cronometro
+            if(!casilla.getBanderaPuesta()) { //Si no esta puesta la bandera
+                if (!casilla.getYaPulsada()) { //Y si no esta pulsada
+                    casillaSeleccionada.setImageResource(R.drawable.bandera); //Le pone a la casilla la bandera
+                    if(!desactivarSonido) { //Si no esta desactivado el sonido, hace el sonido de poner la bandera
                         mediaPlayer = MediaPlayer.create(this, R.raw.banderapuesta);
                         mediaPlayer.start();
                     }
                     casilla.setBanderaPuesta(true);
                     casilla.setYaPulsada(true);
-                    vm.setNumeroMinas(vm.getNumeroMinas()-1);
+                    vm.setNumeroMinas(vm.getNumeroMinas()-1); //Le quita al contador de minas que sale arriba 1
                     minas.setText(String.valueOf(vm.getNumeroMinas()));
                     pulsoLargo = true;
                 }
-            }else{
+            }else{ //En el caso de que la bandera ya este puesta la quita y le vuelve a sumar 1 al contador de minas
                 casillaSeleccionada.setImageResource(R.drawable.casilla);
                 if(!desactivarSonido) {
                     mediaPlayer = MediaPlayer.create(this, R.raw.banderaquitada);
@@ -426,6 +446,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         return pulsoLargo;
     }
 
+    //Este es el menu superior a la derecha para cerrar sesion y desactivar el sonido
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -441,11 +462,12 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean itemSeleccionado = false;
         switch(item.getItemId()){
-            case R.id.cerrarSesion:
+            case R.id.cerrarSesion: //Si pulsa el boton se cierra sesion en firebase y te envia denuevo al login
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(JuegoActivity.this,LoginActivity.class));
@@ -481,25 +503,19 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
+    //Este metodo es para entrar en el modo inmersivo cuando se entra en el juego
     private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-
+    //Con este runnable controlo que si se ha salido del modo inmersivo que al cabo de un tiempo vuelva a entrar solo en ese modo
     private final Runnable autoHideRunner = new Runnable() {
         @Override
         public void run() {

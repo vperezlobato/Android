@@ -3,7 +3,7 @@ package com.example.buscaminas.ViewModelJuego;
 import androidx.lifecycle.ViewModel;
 
 import com.example.buscaminas.Clases.tablero;
-import com.example.buscaminas.ManejadorJuego;
+import com.example.buscaminas.Manejadora.ManejadorJuego;
 
 public class ViewModelJuego extends ViewModel {
 

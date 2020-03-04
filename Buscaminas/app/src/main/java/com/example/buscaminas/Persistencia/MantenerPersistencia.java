@@ -1,4 +1,4 @@
-package com.example.buscaminas;
+package com.example.buscaminas.Persistencia;
 
 import com.google.firebase.database.FirebaseDatabase;
 

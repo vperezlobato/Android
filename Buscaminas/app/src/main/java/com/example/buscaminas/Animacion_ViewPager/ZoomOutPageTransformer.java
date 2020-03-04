@@ -1,4 +1,4 @@
-package com.example.buscaminas;
+package com.example.buscaminas.Animacion_ViewPager;
 
 import android.view.View;
 

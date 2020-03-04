@@ -40,36 +40,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         accOlvidada = findViewById(R.id.textPasswordOlvidada);
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
-
+        accOlvidada.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         progressDialog = new ProgressDialog(this);
-        if(user != null){
+
+        if(user != null){ //Si ya iniciaste sesion y no la cerraste te envia directamente a la actividad principal
             finish();
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
         }
-        accOlvidada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editEmail.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
-                }else {
-                    mAuth.sendPasswordResetEmail(editEmail.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Se te han enviado instrucciones para resetear tu contraseña", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(LoginActivity.this, "¡Error al enviar el correo electrónico de restablecimiento!", Toast.LENGTH_SHORT).show();
-                            }
 
-                        }
-                    });
-                }
-            }
-        });
     }
 
 
@@ -89,10 +71,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
                 overridePendingTransition(R.transition.fade_in, R.transition.fade_out);
             break;
+            //Metodo onclick en el label para que te envie un mensaje al correo en el que puedes cambiar la contraseña
+            case R.id.textPasswordOlvidada:
+                if (editEmail.getText().toString().isEmpty()) { //Si no tienes un correo electronico introducido cuando pinchas en el label
+                    Toast.makeText(getApplication(), "Introduce tu correo electronico registrado", Toast.LENGTH_SHORT).show();
+                }else {
+                    mAuth.sendPasswordResetEmail(editEmail.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) { //Si ha conseguido enviar el correo correctamente
+                                Toast.makeText(LoginActivity.this, "Se te han enviado instrucciones para resetear tu contraseña", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(LoginActivity.this, "¡Error al enviar el correo electrónico de restablecimiento!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                }
+            break;
         }
 
     }
 
+    //Metodo para iniciar sesion en firebase enviandole el email y la contraseña
     public void iniciarSesion(){
         progressDialog.setMessage("Comprobando credenciales, por favor espere.");
         progressDialog.show();

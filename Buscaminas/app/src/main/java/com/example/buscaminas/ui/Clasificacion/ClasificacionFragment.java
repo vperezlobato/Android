@@ -71,7 +71,7 @@ public class ClasificacionFragment extends Fragment {
             {
                 switch (RGfiltraDificultad.getCheckedRadioButtonId()) {
                     case R.id.Facil:
-                        vm.filtrarPorDificultad("Nivel Facil");//probablemente no sea necesario pero lo he dejado asi para evitar problemas
+                        vm.filtrarPorDificultad("Nivel Facil");
                         vm.setDificultad("Nivel Facil");//esto se lo añadi para que si dejas pulsado el checkbox
                                                         // y juegas una partida se realice el cambio en la lista y se pueda ver reflejado al cambiar de fragment
                         break;

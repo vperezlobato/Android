@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import com.example.buscaminas.R;
 import com.example.buscaminas.Adapters.ViewPagerAdapter;
-import com.example.buscaminas.ZoomOutPageTransformer;
+import com.example.buscaminas.Animacion_ViewPager.ZoomOutPageTransformer;
 import com.example.buscaminas.Play.PlayFragment;
 import com.example.buscaminas.ui.Clasificacion.ClasificacionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,12 +37,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         bottomNavigationView  = findViewById(R.id.nav_view);
 
+        //para controlar cada vez que desactivas y activas el sonido entre el cierre de la aplicacion y la navegacion entre los activities utilizo un sharedPreference
         SharedPreferences prefs = getApplicationContext().getSharedPreferences("MyDesactivarSonidoPref",MODE_PRIVATE);
         editor = prefs.edit();
         desactivarSonido = prefs.getBoolean("sonidoDesactivar",false);
 
         viewPager = findViewById(R.id.viewpager);
-        viewPager.setPageTransformer(true,new ZoomOutPageTransformer());
+        viewPager.setPageTransformer(true,new ZoomOutPageTransformer()); //Animacion para cuando deslizas entre paginas,
+                                                                                           // cuanto mas cerca esta del desliz a derecha o izquierda se ve que se pone al fondo
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
             }
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
 
             public void onPageSelected(int position) {
-                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true); //Al hacer un deslizamiento de pag se le dice al mismo tiempo al bottomNavigationView su nueva posicion
             }
         });
 
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         setupViewPager(viewPager);
 
-        if (!desactivarSonido) {
+        if (!desactivarSonido) { //Si no esta desactivado el sonido empieza a sonar
             mediaPlayer = MediaPlayer.create(this, R.raw.suspenso);
             mediaPlayer.start();
             mediaPlayer.setLooping(true);
@@ -73,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()) {
 
             case R.id.navigation_Play:
-                viewPager.setCurrentItem(0);
-
+                viewPager.setCurrentItem(0); //Lo mismo que le dices al bottomNavigationView cuando deslizas el viewpager, hay que hacer pero esta vez al contrario,
+                                             // pinchas el bottomNavigationView y le dices al viewpager su nueva posicion seleccionada
                 pagActual = true;
             break;
 
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return pagActual;
     }
 
+    //En este metodo se carga el listado de fragmentos del viewpager que son 2
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         playFragment =new PlayFragment();
@@ -95,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         viewPager.setAdapter(adapter);
     }
 
+    //Este es el menu superior a la derecha para cerrar sesion y desactivar el sonido
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -115,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean itemSeleccionado = false;
         switch(item.getItemId()){
-            case R.id.cerrarSesion:
+            case R.id.cerrarSesion: //Si pulsa el boton se cierra sesion en firebase y te envia denuevo al login
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
@@ -140,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         editor.commit();
         return itemSeleccionado;
     }
+
     @Override
     public void onPause(){
         super.onPause();
@@ -149,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             mediaPlayer = null;
         }
     }
+
     @Override
     public void onResume()
     {
@@ -176,14 +182,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+    //Esto es para que cuando cambies al fragmento de la clasificacion si le das atras vuelva al fragmento de play y no se salga de la app
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
         } else {
-            // Otherwise, select the previous step.
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
